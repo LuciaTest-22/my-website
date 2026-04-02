@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momenta Tool Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  /* Momenta VI 3.1 Official Colors */
+  --blue: #0068EB; --blue-light: #E6F0FE; --blue-dark: #0055C8;
+  --vi-sub1: #1B48C5; --vi-sub2: #1D2088; --vi-sub3: #F67D2B;
+  --bg: #FAFBFC; --surface: #FFFFFF; --surface2: #F4F5F7;
+  --border: #EBECF0; --border2: #DFE1E6;
+  --t1: #1A1A2E; --t2: #505F79; --t3: #6B778C; --t4: #97A0AF;
+  --green: #00C853; --yellow: #FFB800; --red: #FF3B3B;
+  --purple: #7C4DFF; --cyan: #00BCD4; --orange: #FF6F00; --pink: #E91E63;
+  --r: 6px; --rm: 8px; --rl: 12px;
+  --shadow: 0 1px 3px rgba(26,26,46,.1),0 1px 2px rgba(26,26,46,.06);
+  --shadow-md: 0 4px 12px rgba(26,26,46,.1),0 2px 4px rgba(26,26,46,.06);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;font-size:14px;line-height:1.6;color:var(--t1);background:var(--bg);-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+.hd{position:fixed;top:0;left:0;right:0;height:64px;background:var(--blue);z-index:1000;box-shadow:0 2px 8px rgba(0,104,235,.3)}
+.hd-in{max-width:1200px;margin:0 auto;padding:0 24px;height:100%;display:flex;align-items:center;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.logo-m{width:32px;height:32px;background:rgba(255,255,255,.2);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.logo-text{font-size:16px;font-weight:700;color:#fff;letter-spacing:-.3px;white-space:nowrap}
+.hd-nav{display:flex;align-items:center;gap:2px;flex:1}
+.hd-nav a{padding:5px 11px;border-radius:var(--r);color:rgba(255,255,255,.8);font-size:13px;font-weight:500;text-decoration:none;transition:.15s ease;white-space:nowrap}
+.hd-nav a:hover,.hd-nav a.on{background:rgba(255,255,255,.15);color:#fff}
+.search-wrap{position:relative;flex-shrink:0;width:220px}
+.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.65);font-size:13px;pointer-events:none}
+#searchInput{width:100%;height:34px;padding:0 36px 0 32px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:var(--rm);color:#fff;font-family:inherit;font-size:13px;outline:none;transition:.15s}
+#searchInput::placeholder{color:rgba(255,255,255,.6)}
+#searchInput:focus{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.45)}
+.kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:11px;color:rgba(255,255,255,.45);pointer-events:none}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0041B2 0%,#0068EB 55%,#3A7FFF 100%);padding:52px 0 60px;text-align:center;color:#fff}
+.hero-label{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);padding:4px 14px;border-radius:100px;font-size:12px;font-weight:500;margin-bottom:18px}
+.hero h1{font-size:38px;font-weight:700;letter-spacing:-.8px;margin-bottom:10px}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.8);max-width:460px;margin:0 auto 32px}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:28px}
+.hs-num{font-size:26px;font-weight:700}
+.hs-lbl{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px}
+.hs-div{width:1px;height:36px;background:rgba(255,255,255,.2)}
+
+/* LAYOUT */
+.pw{padding-top:64px}
+.ct{max-width:1200px;margin:0 auto;padding:0 24px}
+.sec{padding:48px 0}
+.sec+.sec{border-top:1px solid var(--border)}
+.sec-alt{background:var(--surface)}
+.sec-hd{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.sec-icon{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;flex-shrink:0}
+.sec-title{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.sec-desc{font-size:12px;color:var(--t3);margin-top:2px}
+.badge-new{display:inline-flex;align-items:center;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:600;background:#FFF1F0;color:var(--red);border:1px solid #FFCCC7;margin-left:8px}
+
+/* SKILL HUB */
+.skill-sec{background:linear-gradient(180deg,#E4EFFE 0%,#F2F7FF 60%,var(--bg) 100%)}
+.how-to{background:var(--blue-light);border:1px solid rgba(0,104,235,.2);border-radius:var(--rm);padding:14px 18px;margin-bottom:22px;display:flex;align-items:flex-start;gap:10px}
+.how-to i{color:var(--blue);font-size:15px;margin-top:2px;flex-shrink:0}
+.how-to p{font-size:13px;color:var(--t2);line-height:1.6}
+.how-to strong{color:var(--blue);font-weight:600}
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.sk{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px;transition:.2s;position:relative;overflow:hidden}
+.sk::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--c,var(--blue));border-radius:3px 0 0 3px}
+.sk:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--border2)}
+.sk-hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.sk-icon{width:42px;height:42px;border-radius:var(--rm);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0}
+.sk-title{font-size:14px;font-weight:600;color:var(--t1)}
+.sk-sub{font-size:11px;color:var(--t4);letter-spacing:.3px;margin-top:1px}
+.sk-desc{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:14px}
+.trg-lbl{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.trg-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;padding:3px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:100px;font-size:12px;font-family:'JetBrains Mono','SF Mono',Consolas,monospace;color:var(--t2);cursor:pointer;transition:.15s}
+.chip:hover{background:var(--blue-light);border-color:rgba(0,104,235,.3);color:var(--blue)}
+.sk-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:2px 8px;border-radius:100px;background:var(--surface2);color:var(--t3);font-weight:500}
+
+/* ONBOARDING STEPS */
+.onboard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:20px 24px;margin-bottom:20px}
+.onboard-title{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.onboard-title i{color:var(--blue);font-size:14px}
+.onboard-steps{display:flex;align-items:flex-start;gap:0}
+.onboard-step{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative}
+.onboard-step+.onboard-step::before{content:'';position:absolute;left:0;top:19px;width:1px;height:24px;background:var(--border)}
+.step-num{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;margin-bottom:8px;flex-shrink:0}
+.step-num.s1{background:#E6F0FE;color:var(--blue)}
+.step-num.s2{background:#EDE7FF;color:var(--purple)}
+.step-num.s3{background:#E6F9EE;color:var(--green)}
+.step-label{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--t3);line-height:1.5;max-width:160px}
+.step-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;font-weight:500;color:var(--blue);text-decoration:none;padding:3px 10px;border:1px solid rgba(0,104,235,.25);border-radius:100px;transition:.15s}
+.step-link:hover{background:var(--blue-light)}
+.onboard-divider{width:40px;height:1px;background:var(--border2);align-self:flex-start;margin-top:19px;flex-shrink:0}
+/* skill source badge */
+.sk-source{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;margin-bottom:10px}
+.src-internal{background:#EDE7FF;color:var(--purple)}
+.src-public{background:#E6F9EE;color:var(--green)}
+.src-pending{background:#FFF7E6;color:var(--orange)}
+.sk-install{margin-top:12px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r)}
+.sk-install-lbl{font-size:10px;font-weight:600;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.sk-install-cmd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.sk-install-cmd code{font-size:11px;font-family:'JetBrains Mono','SF Mono',Consolas,monospace;color:var(--t1);word-break:break-all;flex:1}
+.sk-install-copy{border:none;background:none;color:var(--t3);cursor:pointer;font-size:12px;padding:2px 6px;border-radius:var(--r);transition:.15s;flex-shrink:0}
+.sk-install-copy:hover{background:var(--border);color:var(--t1)}
+
+/* SKILL HUB SEARCH */
+.skill-search{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.skill-search-iw{position:relative;flex:1;min-width:240px}
+.skill-search-iw i.si{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none}
+#skillSearch{width:100%;height:40px;padding:0 40px 0 38px;border:2px solid var(--border);border-radius:var(--rm);font-family:inherit;font-size:14px;color:var(--t1);background:var(--surface);outline:none;transition:.2s}
+#skillSearch:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,104,235,.1)}
+#skillSearch::placeholder{color:var(--t4)}
+.skill-search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;border:none;background:var(--surface2);border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;color:var(--t3);font-size:11px;transition:.15s}
+.skill-search-clear:hover{background:var(--border2);color:var(--t1)}
+.skill-search-clear.vis{display:flex}
+.sf-filters{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sf-lbl{font-size:12px;color:var(--t3);font-weight:500;white-space:nowrap}
+.sf-btn{padding:5px 12px;border:1px solid var(--border);border-radius:100px;background:var(--surface);color:var(--t2);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;transition:.15s}
+.sf-btn:hover{border-color:var(--blue);color:var(--blue)}
+.sf-btn.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.skill-count{font-size:12px;color:var(--t3);margin-left:4px;transition:.2s}
+.sk.sk-hidden{display:none}
+
+/* TOOL GRID */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:22px}
+.box-title{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--t1)}
+.box-title-icon{width:26px;height:26px;background:var(--blue-light);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:12px;flex-shrink:0}
+.fgrp{margin-bottom:10px}
+.flbl{display:block;font-size:12px;font-weight:500;color:var(--t2);margin-bottom:5px}
+.finput{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--t1);background:var(--surface);outline:none;transition:.15s;resize:vertical}
+.finput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,104,235,.1)}
+.finput::placeholder{color:var(--t4)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:.15s}
+.btn:hover{background:var(--blue-dark)}
+.result{margin-top:10px;padding:12px;background:var(--surface2);border-radius:var(--rm);min-height:72px;font-size:13px;line-height:1.7;color:var(--t2);white-space:pre-line}
+
+/* LINKS */
+.links{display:flex;flex-direction:column;gap:8px}
+.lk{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid transparent;border-radius:var(--rm);text-decoration:none;color:var(--t1);transition:.15s}
+.lk:hover{background:var(--blue-light);border-color:rgba(0,104,235,.2);transform:translateX(2px)}
+.lk-icon{width:32px;height:32px;background:var(--blue);border-radius:var(--r);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;flex-shrink:0}
+.lk-title{font-weight:500;font-size:13px}
+.lk-desc{font-size:12px;color:var(--t3);margin-top:1px}
+.lk-arr{color:var(--t4);font-size:11px;margin-left:auto;flex-shrink:0}
+
+/* COLORS */
+.cstrip{display:flex;height:56px;border-radius:var(--rm);overflow:hidden;border:1px solid var(--border);margin-bottom:6px}
+.cb{flex:1;display:flex;align-items:flex-end;padding:5px 7px}
+.cb span{font-size:10px;font-weight:600;font-family:monospace;color:rgba(255,255,255,.9)}
+.clbl{font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.csec{margin-bottom:16px}
+
+/* VI LINKS & FONTS */
+.vi-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px solid var(--border);border-radius:100px;font-size:12px;font-weight:500;color:var(--t2);text-decoration:none;background:var(--surface2);transition:.15s}
+.vi-link:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+.vi-link i{font-size:11px}
+.font-row{display:flex;flex-direction:column;gap:4px}
+.font-demo{line-height:1.3}
+.font-meta{display:flex;align-items:center;gap:8px;margin-top:4px}
+.font-name{font-size:12px;font-weight:600;color:var(--t2)}
+.font-use{font-size:11px;color:var(--t4);padding:1px 7px;background:var(--surface2);border-radius:100px}
+
+/* BRAND ACCOUNTS */
+.accs-sec{padding:36px 0;border-top:1px solid var(--border);background:var(--surface)}
+.accs-title{font-size:15px;font-weight:600;margin-bottom:18px}
+.accs-grid{display:flex;flex-wrap:wrap;gap:18px}
+.acc{display:flex;flex-direction:column;align-items:center;gap:7px;text-decoration:none;width:68px;transition:.15s}
+.acc:hover{transform:translateY(-3px)}
+.acc-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px}
+.acc-name{font-size:12px;color:var(--t2);font-weight:500;text-align:center}
+.xhs{background:linear-gradient(135deg,#FE2C55,#F85959)}
+.wx{background:linear-gradient(135deg,#07C160,#00B51D)}
+.wv{background:linear-gradient(135deg,#00C1DE,#00A3E0)}
+.zh{background:linear-gradient(135deg,#0084FF,#0066CC)}
+.bl{background:linear-gradient(135deg,#FB7299,#FCA522)}
+.yt{background:linear-gradient(135deg,#FF0000,#CC0000)}
+
+/* MISC */
+.hidden{display:none!important}
+.no-res{display:none;text-align:center;padding:60px 24px;color:var(--t3)}
+.no-res-icon{font-size:36px;margin-bottom:14px;opacity:.4}
+.no-res-title{font-size:16px;font-weight:500;margin-bottom:4px;color:var(--t2)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--t1);color:#fff;padding:9px 18px;border-radius:var(--rm);font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:all .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.btt{position:fixed;bottom:24px;right:24px;width:38px;height:38px;background:var(--blue);color:#fff;border:none;border-radius:var(--rm);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;opacity:0;transform:translateY(8px);transition:.2s;z-index:500;box-shadow:var(--shadow-md)}
+.btt.on{opacity:1;transform:translateY(0)}
+footer{background:var(--surface2);border-top:1px solid var(--border);padding:28px 0;text-align:center;font-size:13px;color:var(--t3)}
+@media(max-width:768px){.hd-nav{display:none}.search-wrap{width:160px}.hero h1{font-size:28px}.skill-grid,.tool-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hd">
+  <div class="hd-in">
+    <a href="#top" class="logo">
+      <div class="logo-m">M</div>
+      <span class="logo-text">Tool Center</span>
+    </a>
+    <nav class="hd-nav">
+      <a href="#skills">AI Skill Hub</a>
+      <a href="#content">内容创作</a>
+      <a href="#visual">视觉设计</a>
+      <a href="#translation">翻译排版</a>
+      <a href="#media">音视频素材</a>
+    </nav>
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input id="searchInput" type="text" placeholder="搜索工具… ⌘K" autocomplete="off">
+      <span class="kbd"></span>
+    </div>
+  </div>
+</header>
+
+<div class="pw" id="top">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ct">
+    <div class="hero-label"><i class="fas fa-bolt"></i> Momenta OC&amp;TD</div>
+    <h1>Tool Center</h1>
+    <p class="hero-sub">团队效率工具集成入口，一站式访问所有 AI 技能与创作资源</p>
+    <div class="hero-stats">
+      <div><div class="hs-num">6</div><div class="hs-lbl">AI Skills</div></div>
+      <div class="hs-div"></div>
+      <div><div class="hs-num">10</div><div class="hs-lbl">实用工具</div></div>
+      <div class="hs-div"></div>
+      <div><div class="hs-num">5</div><div class="hs-lbl">工具类别</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- AI SKILL HUB -->
+<section id="skills" class="sec skill-sec">
+  <div class="ct">
+    <div class="sec-hd">
+      <div class="sec-icon" style="background:var(--blue)"><i class="fas fa-robot"></i></div>
+      <div>
+        <div style="display:flex;align-items:center">
+          <span class="sec-title">AI Skill Hub</span>
+          <span class="badge-new">NEW</span>
+        </div>
+        <div class="sec-desc">团队专属 AI 技能集，在 Claude Code 中直接调用</div>
+      </div>
+    </div>
+    <div class="onboard">
+      <div class="onboard-title"><i class="fas fa-map-signs"></i> 首次使用？按以下步骤操作</div>
+      <div class="onboard-steps">
+        <div class="onboard-step">
+          <div class="step-num s1"><i class="fas fa-download"></i></div>
+          <div class="step-label">安装 Claude Code</div>
+          <div class="step-desc">在终端运行安装命令，或前往官方文档</div>
+          <a href="https://docs.anthropic.com/zh-CN/docs/claude-code/getting-started" target="_blank" class="step-link"><i class="fas fa-external-link-alt"></i> 安装指南</a>
+        </div>
+        <div class="onboard-divider"></div>
+        <div class="onboard-step">
+          <div class="step-num s2"><i class="fas fa-box-open"></i></div>
+          <div class="step-label">安装 Skill</div>
+          <div class="step-desc">从 Momenta Skill Hub 或公共社区安装对应技能包</div>
+          <a href="https://abp.momenta.works/skill/list" target="_blank" class="step-link"><i class="fas fa-external-link-alt"></i> Momenta Skill Hub</a>
+        </div>
+        <div class="onboard-divider"></div>
+        <div class="onboard-step">
+          <div class="step-num s3"><i class="fas fa-comment-dots"></i></div>
+          <div class="step-label">输入触发词</div>
+          <div class="step-desc">打开 Claude Code，在对话中说出下方触发词即可调用</div>
+          <span class="step-link" style="cursor:default;color:var(--green);border-color:rgba(0,200,83,.25)"><i class="fas fa-check"></i> 直接使用</span>
+        </div>
+      </div>
+    </div>
+    <div class="skill-search">
+      <div class="skill-search-iw">
+        <i class="fas fa-search si"></i>
+        <input id="skillSearch" type="text" placeholder="搜索技能名称、功能关键词…" autocomplete="off">
+        <button class="skill-search-clear" id="skillClear"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="sf-filters">
+        <span class="sf-lbl">筛选：</span>
+        <button class="sf-btn on" data-f="all">全部</button>
+        <button class="sf-btn" data-f="文档管理">文档</button>
+        <button class="sf-btn" data-f="招聘">招聘</button>
+        <button class="sf-btn" data-f="AI探索">AI探索</button>
+        <button class="sf-btn" data-f="开发">开发</button>
+        <button class="sf-btn" data-f="机器人">机器人</button>
+        <span class="skill-count" id="skillCount">6 个技能</span>
+      </div>
+    </div>
+
+    <div class="skill-grid">
+
+      <div class="sk" style="--c:#0068EB" data-s data-t="飞书 feishu 文档 wiki 多维表格 日历 云盘">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#0068EB"><i class="fas fa-file-alt"></i></div>
+          <div><div class="sk-title">飞书文档助手</div><div class="sk-sub">Feishu Assistant</div></div>
+        </div>
+        <span class="sk-source src-internal"><i class="fas fa-building"></i> Momenta 内部</span>
+        <div class="sk-desc">读取、创建、编辑飞书文档，搜索 Wiki、多维表格、日历和云盘文件，无需切换应用。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">飞书</span>
+          <span class="chip" onclick="copy(this)">feishu</span>
+          <span class="chip" onclick="copy(this)">查看文档</span>
+          <span class="chip" onclick="copy(this)">编辑飞书</span>
+        </div>
+        <div class="sk-tags"><span class="tag">文档管理</span><span class="tag">效率工具</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">安装命令</div>
+          <div class="sk-install-cmd">
+            <code>npx skills add ...@feishu</code>
+            <button class="sk-install-copy" data-cmd="npx skills add https://mcp-hub.momenta.works/wk/Momenta/public/zhixiong-public-skills/dev@feishu" onclick="copyCmd(this)" title="复制完整安装命令"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk" style="--c:#7C4DFF" data-s data-t="找skill 搜索技能 AI工具 发现 社区">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#7C4DFF"><i class="fas fa-search"></i></div>
+          <div><div class="sk-title">AI 技能搜索</div><div class="sk-sub">Skill Finder</div></div>
+        </div>
+        <span class="sk-source src-internal"><i class="fas fa-building"></i> Momenta 内部</span>
+        <div class="sk-desc">智能搜索公共社区与内部技能库，多关键词并发搜索，发现最适合你场景的 AI 工具。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">找skill</span>
+          <span class="chip" onclick="copy(this)">搜索技能</span>
+          <span class="chip" onclick="copy(this)">有没有...的工具</span>
+        </div>
+        <div class="sk-tags"><span class="tag">AI探索</span><span class="tag">工具发现</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">安装命令</div>
+          <div class="sk-install-cmd">
+            <code>npx skills add ...@find-skills-AI</code>
+            <button class="sk-install-copy" data-cmd="npx skills add https://mcp-hub.momenta.works/wk/Momenta/public/claude_skills/master@find-skills-AI" onclick="copyCmd(this)" title="复制完整安装命令"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk" style="--c:#00C853" data-s data-t="面试题 interview 简历 JD 候选人 招聘 评分">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#00C853"><i class="fas fa-clipboard-list"></i></div>
+          <div><div class="sk-title">面试题生成器</div><div class="sk-sub">Interview Prep</div></div>
+        </div>
+        <span class="sk-source src-pending"><i class="fas fa-clock"></i> 待发布，联系团队获取</span>
+        <div class="sk-desc">根据候选人简历（飞书链接 / PDF）和岗位 JD，自动生成结构化面试题、追问建议和评分标准。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">出面试题</span>
+          <span class="chip" onclick="copy(this)">生成面试题</span>
+          <span class="chip" onclick="copy(this)">interview</span>
+        </div>
+        <div class="sk-tags"><span class="tag">招聘</span><span class="tag">面试</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">获取方式</div>
+          <div class="sk-install-cmd">
+            <code>暂未上架 · 联系 OC&amp;TD 团队获取安装文件</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk" style="--c:#00BCD4" data-s data-t="招聘进展 简历 候选人 今日招聘 进面 offer 跟踪">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#00BCD4"><i class="fas fa-chart-line"></i></div>
+          <div><div class="sk-title">招聘进展跟踪</div><div class="sk-sub">Recruitment Tracker</div></div>
+        </div>
+        <span class="sk-source src-pending"><i class="fas fa-clock"></i> 待发布，联系团队获取</span>
+        <div class="sk-desc">自动读取飞书招聘群聊天记录，提炼当日简历来源、各阶段候选人数，一键生成进展摘要卡片。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">招聘进展</span>
+          <span class="chip" onclick="copy(this)">今日招聘</span>
+          <span class="chip" onclick="copy(this)">候选人</span>
+        </div>
+        <div class="sk-tags"><span class="tag">招聘</span><span class="tag">数据跟踪</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">获取方式</div>
+          <div class="sk-install-cmd">
+            <code>暂未上架 · 联系 OC&amp;TD 团队获取安装文件</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk" style="--c:#FF6F00" data-s data-t="飞书bot 机器人 配置 websocket claude bot">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#FF6F00"><i class="fas fa-robot"></i></div>
+          <div><div class="sk-title">飞书 Claude Bot</div><div class="sk-sub">Feishu Bot Setup</div></div>
+        </div>
+        <span class="sk-source src-internal"><i class="fas fa-building"></i> Momenta 内部</span>
+        <div class="sk-desc">配置并管理 Claude 飞书远程助手机器人，基于 WebSocket 长连接，无需公网地址，群内直接使用 AI。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">飞书bot</span>
+          <span class="chip" onclick="copy(this)">飞书机器人配置</span>
+        </div>
+        <div class="sk-tags"><span class="tag">机器人</span><span class="tag">配置工具</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">安装命令</div>
+          <div class="sk-install-cmd">
+            <code>npx skills add ...@feishu-claude-bot</code>
+            <button class="sk-install-copy" data-cmd="npx skills add https://mcp-hub.momenta.works/wk/Momenta/SAI/sai_skills/master@feishu-claude-bot" onclick="copyCmd(this)" title="复制完整安装命令"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sk" style="--c:#E91E63" data-s data-t="网页 React UI 界面 antd 设计 构建 前端">
+        <div class="sk-hd">
+          <div class="sk-icon" style="background:#E91E63"><i class="fas fa-desktop"></i></div>
+          <div><div class="sk-title">网页快速构建</div><div class="sk-sub">Momenta Web Builder</div></div>
+        </div>
+        <span class="sk-source src-internal"><i class="fas fa-building"></i> Momenta 内部</span>
+        <div class="sk-desc">按 Momenta 品牌规范，用 React + Ant Design 快速构建管理界面、数据看板和内部工具页面。</div>
+        <div class="trg-lbl">安装后触发词</div>
+        <div class="trg-chips">
+          <span class="chip" onclick="copy(this)">构建网页</span>
+          <span class="chip" onclick="copy(this)">React UI</span>
+          <span class="chip" onclick="copy(this)">设计界面</span>
+        </div>
+        <div class="sk-tags"><span class="tag">开发</span><span class="tag">UI设计</span></div>
+        <div class="sk-install">
+          <div class="sk-install-lbl">安装命令</div>
+          <div class="sk-install-cmd">
+            <code>npx skills add ...@momenta-web-skill</code>
+            <button class="sk-install-copy" data-cmd="npx skills add https://mcp-hub.momenta.works/wk/Momenta/public/dpi-fe-skills/master@momenta-web-skill" onclick="copyCmd(this)" title="复制完整安装命令"><i class="fas fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT CREATION -->
+<section id="content" class="sec sec-alt">
+  <div class="ct">
+    <div class="sec-hd">
+      <div class="sec-icon" style="background:var(--purple)"><i class="fas fa-pen-fancy"></i></div>
+      <div>
+        <div class="sec-title">内容创作工具</div>
+        <div class="sec-desc">标题生成、敏感词检测，助力高质量内容产出</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+      <div class="box" data-s data-t="标题生成器 爆款 内容创作 关键词 小红书">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-magic"></i></div>爆款标题生成器</div>
+        <div class="fgrp">
+          <label class="flbl">输入内容关键词</label>
+          <input id="kw" class="finput" type="text" placeholder="例：自动驾驶、实习生、校园招聘…">
+        </div>
+        <button class="btn" onclick="genTitle()"><i class="fas fa-magic"></i> 生成标题</button>
+        <div class="result" id="title-res">标题将显示在这里</div>
+      </div>
+      <div class="box" data-s data-t="敏感词 检测 竞品 合规 自测 审核">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-shield-alt"></i></div>敏感词自测</div>
+        <div class="fgrp">
+          <label class="flbl">粘贴待检测内容</label>
+          <textarea id="sens" class="finput" rows="4" placeholder="将即将发布的内容粘贴到此处…"></textarea>
+        </div>
+        <button class="btn" onclick="checkSens()"><i class="fas fa-search"></i> 立即检测</button>
+        <div class="result" id="sens-res"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISUAL DESIGN -->
+<section id="visual" class="sec">
+  <div class="ct">
+    <div class="sec-hd">
+      <div class="sec-icon" style="background:var(--orange)"><i class="fas fa-palette"></i></div>
+      <div>
+        <div class="sec-title">视觉设计资源</div>
+        <div class="sec-desc">VI 规范、在线设计工具与配色灵感参考</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+      <div class="box" data-s data-t="设计工具 稿定 Fotor 懒设计 在线 模板">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-edit"></i></div>在线设计工具</div>
+        <div class="links">
+          <a href="https://www.gaoding.com/" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-pencil-ruler"></i></div>
+            <div><div class="lk-title">稿定设计</div><div class="lk-desc">海量模板，快速出图</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+          <a href="https://www.fotor.com.cn/" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-paint-brush"></i></div>
+            <div><div class="lk-title">懒设计 Fotor</div><div class="lk-desc">智能排版，操作简便</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+        </div>
+      </div>
+      <div class="box" data-s data-t="VI 配色 品牌色 Momenta Blue 颜色规范 色卡 字体 规范手册">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-swatchbook"></i></div>Momenta VI 3.1 配色规范</div>
+        <div class="csec">
+          <div class="clbl">主 VI 色</div>
+          <div class="cstrip" style="height:52px"><div class="cb" style="background:#0068EB"><span>Momenta Blue · #0068EB</span></div></div>
+        </div>
+        <div class="csec">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-bottom:4px"><span>←科技感</span><span>人文感→</span></div>
+          <div class="clbl">一级辅色</div>
+          <div class="cstrip">
+            <div class="cb" style="background:#1B48C5;flex:2"><span>#1B48C5</span></div>
+            <div class="cb" style="background:#1D2088;flex:2"><span>#1D2088</span></div>
+            <div class="cb" style="background:#F67D2B;flex:1"><span>#F67D2B</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <a href="https://momenta.feishu.cn/wiki/wikcnnAjCfoH5YN8MQHoE8SUpyc" target="_blank" class="vi-link"><i class="fas fa-book"></i> VI 3.1 规范手册</a>
+          <a href="https://cloud.momenta.works/index.php/s/NG1hxwhQrnbYeVW" target="_blank" class="vi-link"><i class="fas fa-download"></i> Logo &amp; 字体包</a>
+        </div>
+      </div>
+      <div class="box" data-s data-t="字体 font 品牌字体 Inter PingFang 规范">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-font"></i></div>品牌字体规范</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="font-row">
+            <div class="font-demo" style="font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--t1)">Momenta</div>
+            <div class="font-meta"><span class="font-name">Inter</span><span class="font-use">西文 / UI / 标题</span></div>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div class="font-row">
+            <div class="font-demo" style="font-size:20px;font-weight:600;color:var(--t1);font-family:'PingFang SC','Microsoft YaHei',sans-serif">明道自然，与众不同</div>
+            <div class="font-meta"><span class="font-name">PingFang SC</span><span class="font-use">中文 / 正文</span></div>
+          </div>
+          <div style="height:1px;background:var(--border)"></div>
+          <div class="font-row">
+            <div class="font-demo" style="font-size:18px;font-weight:400;font-family:'JetBrains Mono',monospace;color:var(--t2)">#0068EB · 100%</div>
+            <div class="font-meta"><span class="font-name">Monospace</span><span class="font-use">数据 / 代码</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSLATION -->
+<section id="translation" class="sec sec-alt">
+  <div class="ct">
+    <div class="sec-hd">
+      <div class="sec-icon" style="background:var(--cyan)"><i class="fas fa-language"></i></div>
+      <div>
+        <div class="sec-title">翻译排版工具</div>
+        <div class="sec-desc">提升文档处理效率，高质量内容产出</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+      <div class="box" data-s data-t="排版 悬赏令 翻译 文档 高效 netlify">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-file-invoice"></i></div>高效排版工具</div>
+        <div class="links">
+          <a href="https://spontaneous-licorice-ecfeae.netlify.app/" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-award"></i></div>
+            <div><div class="lk-title">悬赏令高效排版</div><div class="lk-desc">一键处理排版，显著提升文档产出效率</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDIA -->
+<section id="media" class="sec">
+  <div class="ct">
+    <div class="sec-hd">
+      <div class="sec-icon" style="background:var(--pink)"><i class="fas fa-play-circle"></i></div>
+      <div>
+        <div class="sec-title">音视频素材库</div>
+        <div class="sec-desc">免费素材、BGM 与动图转换工具</div>
+      </div>
+    </div>
+    <div class="tool-grid">
+      <div class="box" data-s data-t="视频素材 免费 Coverr Mixkit GIF MP4 转换 动图">
+        <div class="box-title"><div class="box-title-icon"><i class="fas fa-film"></i></div>视频素材与工具</div>
+        <div class="links">
+          <a href="https://coverr.co/" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-camera"></i></div>
+            <div><div class="lk-title">Coverr</div><div class="lk-desc">免费高质量视频素材</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+          <a href="https://mixkit.co/free-stock-video/" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-film"></i></div>
+            <div><div class="lk-title">Mixkit</div><div class="lk-desc">视频片段、转场与音效</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+          <a href="https://ezgif.com/gif-to-mp4" target="_blank" class="lk">
+            <div class="lk-icon"><i class="fas fa-sync-alt"></i></div>
+            <div><div class="lk-title">MP4 / GIF 互转工具</div><div class="lk-desc">在线格式快速转换</div></div>
+            <i class="fas fa-external-link-alt lk-arr"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NO RESULTS -->
+<div class="no-res" id="noRes">
+  <div class="no-res-icon">🔍</div>
+  <div class="no-res-title">未找到匹配的工具</div>
+  <div style="font-size:13px">换个关键词试试</div>
+</div>
+
+<!-- BRAND ACCOUNTS -->
+<div class="accs-sec">
+  <div class="ct">
+    <div class="accs-title">雇主品牌账号入口</div>
+    <div class="accs-grid">
+      <a href="#" class="acc"><div class="acc-av xhs"><i class="fas fa-fire"></i></div><span class="acc-name">小红书</span></a>
+      <a href="#" class="acc"><div class="acc-av wx"><i class="fab fa-weixin"></i></div><span class="acc-name">微信公众号</span></a>
+      <a href="#" class="acc"><div class="acc-av wv"><i class="fas fa-video"></i></div><span class="acc-name">视频号</span></a>
+      <a href="#" class="acc"><div class="acc-av zh"><i class="fas fa-comment-dots"></i></div><span class="acc-name">知乎</span></a>
+      <a href="#" class="acc"><div class="acc-av bl"><i class="fas fa-play"></i></div><span class="acc-name">B站</span></a>
+      <a href="#" class="acc"><div class="acc-av yt"><i class="fab fa-youtube"></i></div><span class="acc-name">YouTube</span></a>
+    </div>
+  </div>
+</div>
+
+<footer><div class="ct">© 2025 Momenta OC&amp;TD · Tool Center</div></footer>
+</div><!-- /pw -->
+
+<div class="toast" id="toast"></div>
+<button class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-arrow-up"></i></button>
+
+<script>
+// SKILL HUB LOCAL SEARCH + FILTER
+const $ss = document.getElementById('skillSearch');
+const $sc = document.getElementById('skillClear');
+const $skCount = document.getElementById('skillCount');
+let activeFilter = 'all';
+
+function updateSkillHub() {
+  const q = $ss.value.trim().toLowerCase();
+  const cards = document.querySelectorAll('.sk');
+  let vis = 0;
+  cards.forEach(c => {
+    const txt = (c.textContent + ' ' + (c.dataset.t || '')).toLowerCase();
+    const tags = c.querySelector('.sk-tags') ? c.querySelector('.sk-tags').textContent.toLowerCase() : '';
+    const matchQ = !q || txt.includes(q);
+    const matchF = activeFilter === 'all' || tags.includes(activeFilter);
+    const show = matchQ && matchF;
+    c.classList.toggle('sk-hidden', !show);
+    if (show) vis++;
+  });
+  $skCount.textContent = vis + ' 个技能';
+  $sc.classList.toggle('vis', q.length > 0);
+}
+
+$ss.addEventListener('input', updateSkillHub);
+
+$ss.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { $ss.value = ''; updateSkillHub(); $ss.blur(); }
+});
+
+function clearSkillSearch() { $ss.value = ''; updateSkillHub(); $ss.focus(); }
+
+document.querySelectorAll('.sf-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sf-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeFilter = btn.dataset.f;
+    updateSkillHub();
+  });
+});
+
+// COPY TRIGGER WORD
+function copy(el){
+  const t=el.textContent.trim();
+  navigator.clipboard.writeText(t).then(()=>toast('已复制触发词「'+t+'」'));
+}
+// COPY INSTALL COMMAND (uses data-cmd attribute for full command)
+function copyCmd(el){
+  const cmd=el.dataset.cmd||el.textContent.trim();
+  navigator.clipboard.writeText(cmd).then(()=>{
+    const icon=el.querySelector('i');
+    if(icon){icon.className='fas fa-check';setTimeout(()=>icon.className='fas fa-copy',1500);}
+    toast('已复制安装命令');
+  });
+}
+
+// TOAST
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent='✓ '+msg;
+  el.classList.add('on');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('on'),2000);
+}
+
+// SEARCH
+const $inp=document.getElementById('searchInput');
+const $noRes=document.getElementById('noRes');
+const $secs=document.querySelectorAll('.sec,.sec-alt,.accs-sec');
+
+function doSearch(q){
+  q=q.trim().toLowerCase();
+  const items=document.querySelectorAll('[data-s]');
+  let vis=0;
+  items.forEach(el=>{
+    const txt=(el.textContent+' '+(el.dataset.t||'')).toLowerCase();
+    const show=!q||txt.includes(q);
+    el.classList.toggle('hidden',!show);
+    if(show)vis++;
+  });
+  // hide empty sections
+  $secs.forEach(sec=>{
+    const tools=sec.querySelectorAll('[data-s]');
+    if(!tools.length)return;
+    const allHidden=Array.from(tools).every(t=>t.classList.contains('hidden'));
+    sec.style.display=allHidden?'none':'';
+  });
+  $noRes.style.display=(!vis&&q)?'block':'none';
+}
+
+$inp.addEventListener('input',e=>doSearch(e.target.value));
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();$inp.focus();$inp.select();}
+  if(e.key==='Escape'&&document.activeElement===$inp){$inp.value='';doSearch('');}
+});
+
+// BACK TO TOP
+window.addEventListener('scroll',()=>{
+  document.getElementById('btt').classList.toggle('on',scrollY>400);
+});
+
+// ACTIVE NAV
+const navLinks=document.querySelectorAll('.hd-nav a');
+const secIds=['skills','content','visual','translation','media'];
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secIds.forEach(id=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<100)cur=id;});
+  navLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+cur));
+},{ passive:true });
+
+// TITLE GENERATOR
+function genTitle(){
+  const v=document.getElementById('kw').value.trim();
+  if(!v){toast('请输入关键词');return;}
+  document.getElementById('title-res').textContent=[
+    '1. 为什么'+v+'正在改变一切？',
+    '2. 我在 Momenta 亲历了'+v+'的全过程',
+    '3. 关于'+v+'，这是最全面的一篇',
+    '4. '+v+'：一个被低估的机会',
+    '5. 真实体验'+v+'之后，我想说…'
+  ].join('\n');
+}
+
+// SENSITIVE WORD CHECK
+function checkSens(){
+  const text=document.getElementById('sens').value;
+  const res=document.getElementById('sens-res');
+  if(!text){toast('请输入内容');return;}
+  const words=['地平线','大疆','华为自动驾驶','百度Apollo','Waymo','Mobileye'];
+  let found=false, hi=text;
+  words.forEach(w=>{
+    if(text.includes(w)){
+      found=true;
+      hi=hi.replace(new RegExp(w,'g'),'<span style="color:#FF3B3B;font-weight:700">'+w+'</span>');
+    }
+  });
+  res.innerHTML=found
+    ?'<div style="color:#FF3B3B;font-weight:600;margin-bottom:8px">⚠️ 检测到竞品词汇</div><div style="background:#fff;padding:10px;border:1px solid #FFCCC7;border-radius:6px;margin-bottom:10px;white-space:pre-wrap">'+hi+'</div><div style="background:#FFF1F0;padding:9px 12px;border-left:3px solid #FF3B3B;font-size:12px;border-radius:0 4px 4px 0">对外发布请避免提及竞品名称、产品、技术，不陷入竞品主导的讨论框架。</div>'
+    :'<span style="color:#00C853;font-weight:500">✓ 检测完成，未发现竞品词汇</span>';
+}
+</script>
+</body>
+</html>
